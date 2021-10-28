@@ -16,7 +16,7 @@ myImage.addEventListener("load", () => {
 
   canvas.width = 800; //205
   canvas.height = 1000; //293
-  const gradient1 = ctx.createLinearGradient(0, 0, canvas.width, canvas.height); // change angle here at width,height
+  const gradient1 = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
   gradient1.addColorStop(0.2, "pink");
   gradient1.addColorStop(0.3, "red");
   gradient1.addColorStop(0.4, "orange");
@@ -25,22 +25,13 @@ myImage.addEventListener("load", () => {
   gradient1.addColorStop(0.7, "turquoise");
   gradient1.addColorStop(0.8, "violet");
 
-  let switcher = 1;
-  let counter = 0;
-  setInterval(() => {
-    counter++;
-    if (counter % 12 === 0) {
-      switcher *= -1;
-    }
-  }, 500);
-
   ctx.drawImage(myImage, 0, 0, canvas.width, canvas.height);
   const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height);
   //   console.log(pixels);
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   let particlesArray = [];
-  const numberOfParticles = 8000;
+  const numberOfParticles = 5000;
   let mappedImage = [];
   for (let y = 0; y < canvas.height; y++) {
     let row = [];
@@ -57,7 +48,7 @@ myImage.addEventListener("load", () => {
     }
     mappedImage.push(row);
   }
-  //   console.log(mappedImage);
+  console.log(mappedImage);
 
   function calculateRelativeBrightness(red, green, blue) {
     return (
@@ -73,7 +64,7 @@ myImage.addEventListener("load", () => {
       this.y = 0;
       this.speed = 0;
       this.velocity = Math.random() * 0.5;
-      this.size = Math.random() * 1.5 + 1; // *1.5 + 1
+      this.size = Math.random() * 1 + 1; // *1.5 + 1
       this.position1 = Math.floor(this.y);
       this.position2 = Math.floor(this.x);
       this.angle = 0;
@@ -87,15 +78,13 @@ myImage.addEventListener("load", () => {
       ) {
         this.speed = mappedImage[this.position1][this.position2][0];
       }
-      let movement = 5.5 - this.speed + this.velocity;
+      let movement = 2.5 - this.speed + this.velocity;
       this.angle += this.speed / 20;
-      this.size = this.speed * 1.1; // can remove if want all to be same size
 
-      this.y += movement + Math.cos(this.angle) * 2;
-      this.x += movement + Math.sin(this.angle) * 2;
-
+      this.y += movement + Math.sin(this.angle) * 2;
+      this.x += movement + Math.cos(this.angle) * 2;
       //   this.y += movement;
-      //   this.x += movement; // move to bottom right
+      //   this.x += movement; move to bottom right
       if (this.y >= canvas.height) {
         this.y = 0;
         this.x = Math.random() * canvas.width;
@@ -107,17 +96,15 @@ myImage.addEventListener("load", () => {
     }
     draw() {
       ctx.beginPath();
-      ctx.fillStyle = "white";
-      if (
-        mappedImage[this.position1] &&
-        mappedImage[this.position1][this.position2]
-      ) {
-        ctx.fillStyle = mappedImage[this.position1][this.position2][1];
-        // ctx.strokeStyle = mappedImage[this.position1][this.position2][1];
-      }
-      //   ctx.fillStyle = gradient1;
+      //   ctx.fillStyle = "white";
+      //   if (
+      //     mappedImage[this.position1] &&
+      //     mappedImage[this.position1][this.position2]
+      //   ) {
+      //     ctx.fillStyle = mappedImage[this.position1][this.position2][1];
+      //   }
+      ctx.fillStyle = gradient1;
       ctx.arc(this.x, this.y, this.size, 0, Math.PI);
-      //   ctx.strokeRect(this.x, this.y, this.size * 2, this.size * 2);
       ctx.fill();
     }
   }
